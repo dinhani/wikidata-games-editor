@@ -1,0 +1,15 @@
+{
+    "name": "wikidata-games-editor",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.html",
+    "dependencies": {
+        "cors-anywhere": "^0.4.0"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Renato Dinhani Conceição <renatodinhani@gmail.com>",
+    "license": "MIT"
+}
