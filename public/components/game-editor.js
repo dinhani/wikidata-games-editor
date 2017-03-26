@@ -13,7 +13,8 @@ app.controller('GameEditorCtrl', function ($scope, client) {
                 propertiesToSave.forEach(prop => {
                     let body = { entity: game.id, propertyType: prop.property, propertyValue: prop.id }
                     let url = "/add-relationship";
-                    client.post(url, body);
+                    client.post(url, body)
+                        .then(success => prop.existing = true);
                 })
             }
         })
