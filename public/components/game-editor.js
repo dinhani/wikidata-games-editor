@@ -11,8 +11,9 @@ app.controller('GameEditorCtrl', function ($scope, client) {
             // do save if necessary
             if (propertiesToSave) {
                 propertiesToSave.forEach(prop => {
-                    let url = "https://www.wikidata.org/w/api.php?action=wbcreateclaim&format=json&entity=" + game.id + "&property=" + prop.property + "&snaktype=value&value={\"entity-type\":\"item\",\"numeric-id\":" + prop.id.replace("Q", "") + "}"
-                    client.post(url);
+                    let body = { entity: game.id, propertyType: prop.property, propertyValue: prop.id }
+                    let url = "/add-relationship";
+                    client.post(url, body);
                 })
             }
         })

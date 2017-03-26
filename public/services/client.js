@@ -31,7 +31,6 @@ app.service('client', function ($sce, $http) {
     // HELPERS
     // =========================================================================
     let generateUrl = function (url) {
-        //return baseUrl + url;
         return url;
     }
 })
