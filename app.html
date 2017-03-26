@@ -1,16 +1,24 @@
 <!doctype html>
 <html ng-app="app">
 
+<head>
+    <style>
+        .ui.button {
+            width: 150px;
+        }
+    </style>
+</head>
+
 <body ng-controller="AppCtrl" class="ui container">
     <!-- MENU -->
-    <div class="ui five item menu">
+    <div class="ui menu">
         <a class="item" ng-click="setProperty(item)" ng-repeat="item in data.menu">{{item.name}}</a>
     </div>
 
     <!-- SEARCH -->
-    <div class="ui segment ">
-        <game-search games="data.games " property="data.property"></game-search>
-    </div>
+    <game-search games="data.games " property="data.property"></game-search>
+
+    <br/>
 
     <!-- EDITOR -->
     <game-table games="data.games" property="data.property"></game-table>

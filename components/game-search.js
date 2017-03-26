@@ -5,8 +5,14 @@ app.controller('GameSearchCtrl', function ($scope, client) {
     // data
     $scope.data = {
         searchTerm: "",
+        onlyGamesWithoutProperties: false,
         searching: false
     }
+
+    // events
+    $scope.$on('search', function () {
+        $scope.search();
+    });
 
     // methods
     $scope.search = function () {
@@ -17,8 +23,14 @@ app.controller('GameSearchCtrl', function ($scope, client) {
                     ?item wdt:P31 wd:Q7889 .
                   	?item rdfs:label ?itemLabel .
                     ?siteLink schema:about ?item .
-                    FILTER (SUBSTR(str(?siteLink), 1, 25) = "https://en.wikipedia.org/")
-                  	FILTER(REGEX(?itemLabel, '.*` + $scope.data.searchTerm + `.*', 'i')) .
+                    FILTER (SUBSTR(str(?siteLink), 1, 25) = "https://en.wikipedia.org/")`
+        if ($scope.data.onlyGamesWithoutProperties) {
+            query += `
+                FILTER NOT EXISTS { ?item wdt:` + $scope.$ctrl.property.id + ` ?any } . `;
+        }
+
+        query += `
+            FILTER(REGEX(?itemLabel, '.*` + $scope.data.searchTerm + `.*', 'i')) .
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en"
                 }
             }
@@ -85,18 +97,24 @@ app.controller('GameSearchCtrl', function ($scope, client) {
 // =============================================================================
 app.component('gameSearch', {
     template: `
-        <div class="ui {{data.searching ? 'loading' : ''}} form">
+        <div class="ui top attached segment {{data.searching ? 'loading' : ''}} form">
             <h2 class="ui dividing header">Games & {{$ctrl.property.name}}</h2>
-            <div class="fields">
-                <div class="fourteen wide field">
+            <div class="two fields">
+                <div class="field">
                     <label>Game:</label>
                     <input type="text" ng-model="data.searchTerm" ng-keypress="($event.which === 13) ? search() : null">
                 </div>
-                <div class="two wide field">
-                    <label>Property:</label>
-                    <a ng-href="https://www.wikidata.org/wiki/Property:{{$ctrl.property.id}}" target="_blank">{{$ctrl.property.id}}</a>
+                <div class="field">
+                    <label>Include only games without properties:</label>
+                    <div class="ui checkbox">
+                        <input type="checkbox" ng-model="data.onlyGamesWithoutProperties">
+                        <label> </label>
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="ui bottom attached segment">
+            <button class="ui primary button" ng-click="search()">Search</button>
         </div>
         `,
     controller: 'GameSearchCtrl',

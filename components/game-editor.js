@@ -39,14 +39,14 @@ app.component('gameTable', {
                         <entity-selector entities="game.properties" property="$ctrl.property"></entity-selector>
                     </td>
                     <td>
-                        <a ng-href="https://www.wikidata.org/wiki/{{game.id}}" target="_blank">Wikidata</a>
+                        <a ng-href="https://www.wikidata.org/wiki/{{game.id}}" target="_blank">Wikidata</a> |
                         <a ng-href="{{game.link}}" target="_blank">Wikipedia</a>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <div class="ui bottom attached segment right aligned">
-            <button class="ui primary button" ng-click="save()">Save {{$ctrl.property.name}}</button>
+        <div class="ui bottom attached segment">
+            <button class="ui primary button" ng-click="save()">Save</button>
         </div>
         `,
     controller: 'GameEditorCtrl',

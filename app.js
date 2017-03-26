@@ -1,6 +1,6 @@
 let app = angular.module('app', ['ngSanitize', 'ngTagsInput']);
 
-app.controller('AppCtrl', function ($scope, client) {
+app.controller('AppCtrl', function ($rootScope, $scope, client) {
     // data
     $scope.data = {
         games: [],
@@ -11,8 +11,16 @@ app.controller('AppCtrl', function ($scope, client) {
                 id: "P400"
             },
             {
+                name: "Series",
+                id: "P179"
+            },
+            {
                 name: "Genres",
                 id: "P136"
+            },
+            {
+                name: "Characters",
+                id: "P674"
             },
             {
                 name: "Developers",
@@ -23,8 +31,12 @@ app.controller('AppCtrl', function ($scope, client) {
                 id: "P123"
             },
             {
-                name: "Series",
-                id: "P179"
+                name: "Engines",
+                id: "P408"
+            },
+            {
+                name: "Game Modes",
+                id: "P404"
             }
         ]
     }
@@ -34,5 +46,6 @@ app.controller('AppCtrl', function ($scope, client) {
     $scope.setProperty = function (property) {
         $scope.data.property = property;
         $scope.data.games = [];
+        $rootScope.$broadcast("search")
     }
 })
