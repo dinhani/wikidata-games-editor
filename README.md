@@ -22,4 +22,4 @@ jbundle install
 jruby server.rb
 ```
 
-3. Access `http:localhost:4567/`
+3. Access `http://localhost:4567/`
