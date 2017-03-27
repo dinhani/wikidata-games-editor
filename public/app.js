@@ -9,6 +9,6 @@ app.controller('AppCtrl', function ($rootScope, $scope, client) {
     // =========================================================================
     $scope.data = {
         entities: [], // loaded entities
-        property: {}  // active relationship
+        propertyToLoad: {}  // active relationship
     }
 })

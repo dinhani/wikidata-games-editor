@@ -9,38 +9,51 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
         {
             id: "Q7889",
             name: "Games",
-            properties: _.sortBy([{
-                name: "Platforms",
-                id: "P400"
-            },
-            {
-                name: "Series",
-                id: "P179"
-            },
-            {
-                name: "Genres",
-                id: "P136"
-            },
-            {
-                name: "Characters",
-                id: "P674"
-            },
-            {
-                name: "Developers",
-                id: "P178"
-            },
-            {
-                name: "Publishers",
-                id: "P123"
-            },
-            {
-                name: "Engines",
-                id: "P408"
-            },
-            {
-                name: "Game Modes",
-                id: "P404"
-            }], r => r.name)
+            properties: [
+                {
+                    name: "Characters",
+                    id: "P674"
+                },
+                {
+                    name: "Developers",
+                    id: "P178"
+                },
+                {
+                    name: "Engines",
+                    id: "P408"
+                },
+                {
+                    name: "Game Modes",
+                    id: "P404"
+                },
+                {
+                    name: "Genres",
+                    id: "P136"
+                },
+                {
+                    name: "Input Devices",
+                    id: "P479"
+                },
+                {
+                    name: "Locations",
+                    id: "P840"
+                },
+                {
+                    name: "Platforms",
+                    id: "P400"
+                },
+                {
+                    name: "Publishers",
+                    id: "P123"
+                },
+                {
+                    name: "Series",
+                    id: "P179"
+                },
+                {
+                    name: "Themes",
+                    id: "P921"
+                }]
         },
         {
             id: "Q95074",
@@ -61,7 +74,8 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
         additionalSearchProperties: [],
         additionalSearchPropertiesValues: [],
         search: "",
-        onlyEntitiesWithoutRelatedEntities: false,
+        onlyWithRelatedEntities: false,
+        onlyWithoutRelatedEntities: false,
         isSearching: false
     }
 
@@ -75,6 +89,16 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
     }
     $scope.selectedSearchPropertyChanged = function () {
         $scope.search();
+    }
+    $scope.onlyWithoutRelatedEntitiesChanged = function () {
+        if ($scope.data.onlyWithoutRelatedEntities) {
+            $scope.data.onlyWithRelatedEntities = false;
+        }
+    }
+    $scope.onlyWithRelatedEntitiesChanged = function () {
+        if ($scope.data.onlyWithRelatedEntities) {
+            $scope.data.onlyWithoutRelatedEntities = false;
+        }
     }
 
     // SEARCH
@@ -98,7 +122,11 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
                     FILTER EXISTS { ?item wdt:` + property.id + " wd:" + value.id + `  } . `;
             }
         }
-        if ($scope.data.onlyEntitiesWithoutRelatedEntities) {
+        if ($scope.data.onlyWithRelatedEntities) {
+            query += `
+                FILTER EXISTS { ?item wdt:` + $scope.data.selectedSearchProperty.id + ` ?any } . `;
+        }
+        if ($scope.data.onlyWithoutRelatedEntities) {
             query += `
                 FILTER NOT EXISTS { ?item wdt:` + $scope.data.selectedSearchProperty.id + ` ?any } . `;
         }
@@ -217,8 +245,15 @@ app.component('entitySearch', {
 
                 <div class="inline field">
                     <div class="ui checkbox">
-                        <input type="checkbox" ng-model="data.onlyEntitiesWithoutRelatedEntities">
-                        <label>Include only entities without {{$ctrl.property.name.toLowerCase()}}</label>
+                        <input type="checkbox" ng-model="data.onlyWithRelatedEntities" ng-change="onlyWithRelatedEntitiesChanged()">
+                        <label>Only WITH {{$ctrl.property.name.toLowerCase()}}</label>
+                    </div>
+                </div>
+
+                <div class="inline field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" ng-model="data.onlyWithoutRelatedEntities" ng-change="onlyWithoutRelatedEntitiesChanged()">
+                        <label>Only WITHOUT {{$ctrl.property.name.toLowerCase()}}</label>
                     </div>
                 </div>
             </div>
