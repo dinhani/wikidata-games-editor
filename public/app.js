@@ -1,4 +1,4 @@
-let app = angular.module('app', ['ngSanitize', 'ngTagsInput']);
+let app = angular.module('app', ['ngSanitize', 'ngTagsInput', 'cfp.hotkeys']);
 
 // =============================================================================
 // JS

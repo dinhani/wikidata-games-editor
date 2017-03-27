@@ -11,7 +11,7 @@ java_import 'org.wikidata.wdtk.wikibaseapi.WbEditEntityAction';
 # ==============================================================================
 def login
     conn = ApiConnection.new("https://www.wikidata.org/w/api.php")
-    conn.login("username", "password"
+    conn.login("username", "password")
     return conn
 end
 conn = login()

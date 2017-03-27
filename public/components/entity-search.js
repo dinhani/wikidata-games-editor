@@ -1,7 +1,7 @@
 // =============================================================================
 // JS
 // =============================================================================
-app.controller('EntitySearchCtrl', function ($scope, client) {
+app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
     // =========================================================================
     // CONSTANTS
     // =========================================================================
@@ -58,6 +58,8 @@ app.controller('EntitySearchCtrl', function ($scope, client) {
     $scope.data = {
         selectedSearch: $scope.availableSearches[0],
         selectedSearchProperty: $scope.availableSearches[0].properties[0],
+        additionalSearchProperties: [],
+        additionalSearchPropertiesValues: [],
         search: "",
         onlyEntitiesWithoutRelatedEntities: false,
         isSearching: false
@@ -88,17 +90,26 @@ app.controller('EntitySearchCtrl', function ($scope, client) {
                   	?item rdfs:label ?itemLabel .
                     ?siteLink schema:about ?item .
                     FILTER (SUBSTR(str(?siteLink), 1, 25) = "https://en.wikipedia.org/")`
+        if ($scope.data.additionalSearchProperties.length === $scope.data.additionalSearchPropertiesValues.length) {
+            for (var i = 0; i < $scope.data.additionalSearchProperties.length; i++) {
+                let property = $scope.data.additionalSearchProperties[i];
+                let value = $scope.data.additionalSearchPropertiesValues[i];
+                query += `
+                    FILTER EXISTS { ?item wdt:` + property.id + " wd:" + value.id + `  } . `;
+            }
+        }
         if ($scope.data.onlyEntitiesWithoutRelatedEntities) {
             query += `
                 FILTER NOT EXISTS { ?item wdt:` + $scope.data.selectedSearchProperty.id + ` ?any } . `;
         }
 
         query += `
-            FILTER(REGEX(?itemLabel, '.*` + $scope.data.search + `.*', 'i')) .
+                FILTER(REGEX(?itemLabel, '.*` + $scope.data.search + `.*', 'i')) .
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en"
                 }
             }
-            LIMIT 10`.trim();
+            LIMIT 15`.trim();
+
         let url = "https://query.wikidata.org/sparql?format=json&query=" + query;
 
         // query entities
@@ -156,7 +167,19 @@ app.controller('EntitySearchCtrl', function ($scope, client) {
         }
     }
 
+    // =========================================================================
+    // SHORTCUTS
+    // =========================================================================
+    hotkeys.add({
+        combo: 'ctrl+enter',
+        description: 'Execute search',
+        callback: $scope.search,
+        allowIn: ["INPUT", "SELECT", "TEXTAREA"]
+    });
 
+    // =========================================================================
+    // INIT
+    // =========================================================================
     $scope.init = function () {
         $scope.search();
     };
@@ -170,18 +193,20 @@ app.component('entitySearch', {
         <div class="ui {{data.isSearching ? 'loading' : ''}} form" ng-init="init()">
             <h2 class="ui top attached header">Search</h2>
 
-            <div class="ui bottom attached segment">
+            <div class="ui attached segment">
+                <div class="ui top attached label">Basic information</div>
+                <div class="two fields">
+                    <div class="field">
+                        <label>Search for:</label>
+                        <select class="ui dropdown" ng-model="data.selectedSearch" ng-options="search.name for search in availableSearches" ng-change="selectedSearchChanged()">
+                        </select>
+                    </div>
 
-                <div class="field">
-                    <label>Search:</label>
-                    <select class="ui dropdown" ng-model="data.selectedSearch" ng-options="search.name for search in availableSearches" ng-change="selectedSearchChanged()">
-                    </select>
-                </div>
-
-                <div class="field">
-                    <label>Relationship:</label>
-                    <select class="ui dropdown" ng-model="data.selectedSearchProperty" ng-options="property.name for property in data.selectedSearch.properties" ng-change="selectedSearchPropertyChanged()">
-                    </select>
+                    <div class="field">
+                        <label>To edit:</label>
+                        <select class="ui dropdown" ng-model="data.selectedSearchProperty" ng-options="property.name for property in data.selectedSearch.properties" ng-change="selectedSearchPropertyChanged()">
+                        </select>
+                    </div>
                 </div>
 
                 <div class="field">
@@ -192,10 +217,25 @@ app.component('entitySearch', {
                 <div class="inline field">
                     <div class="ui checkbox">
                         <input type="checkbox" ng-model="data.onlyEntitiesWithoutRelatedEntities">
-                        <label>Include only entities without properties</label>
+                        <label>Include only entities without {{$ctrl.property.name.toLowerCase()}}</label>
                     </div>
                 </div>
+            </div>
 
+            <div class="ui attached segment">
+                <div class="ui top attached label">Optional conditions</div>
+                <div class="two fields">
+                    <div class="field">
+                        <label>Property:</label>
+                        <property-selector properties="data.additionalSearchProperties"></property-selector>
+                    </div>
+                    <div class="field">
+                        <label>Value:</label>
+                        <entity-selector entities="data.additionalSearchPropertiesValues"></entity-selector>
+                    </div>
+                </div>
+            </div>
+            <div class="ui bottom attached segment">
                 <button class="ui primary button" ng-click="search()">Search</button>
             </div>
         </div>

@@ -11,7 +11,16 @@ app.controller('EntitySelectorCtrl', function ($scope, client) {
         return client.get(url)
             .then(
             success => {
-                let entities = success.data.search.map(e => { return { id: e.id, name: e.label, name: e.label, existing: false, type: $scope.$ctrl.property.id } });
+                let entities = success.data.search
+                    .map(e => {
+                        return { id: e.id, name: e.label, name: e.label, existing: false }
+                    })
+                    .map(e => {
+                        if ($scope.$ctrl.property) {
+                            e.type = $scope.$ctrl.property.id;
+                        }
+                        return e;
+                    });
                 let uniqueEntities = _.uniqBy(entities, e => e.name)
                 return uniqueEntities;
             },
@@ -26,13 +35,13 @@ app.controller('EntitySelectorCtrl', function ($scope, client) {
 // =============================================================================
 app.component('entitySelector', {
     template: `
-        <tags-input ng-model="$ctrl.entities" key-property="id" display-property="name">
+        <tags-input ng-model="$ctrl.entities" key-property="id" display-property="name" add-from-autocomplete-only="true" placeholder="Add {{$ctrl.property.name.toLowerCase()}}">
             <auto-complete source="search($query)" debounce-delay="200"></auto-complete>
         </tags-input>
         `,
     controller: 'EntitySelectorCtrl',
     bindings: {
         entities: "=",
-        property: "="
+        property: "=?"
     }
 })
