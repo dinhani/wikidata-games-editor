@@ -9,7 +9,7 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
         {
             id: "Q7889",
             name: "Games",
-            properties: [{
+            properties: _.sortBy([{
                 name: "Platforms",
                 id: "P400"
             },
@@ -40,7 +40,7 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
             {
                 name: "Game Modes",
                 id: "P404"
-            }]
+            }], r => r.name)
         },
         {
             id: "Q95074",
@@ -110,11 +110,12 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
             }
             LIMIT 15`.trim();
 
-        let url = "https://query.wikidata.org/sparql?format=json&query=" + query;
+        let url = "https://query.wikidata.org/sparql";
+        let params = { format: "json", query: query }
 
         // query entities
         $scope.data.isSearching = true;
-        return client.get(url)
+        return client.get(url, params)
             .then(success => {
                 // entities loaded
                 let entities = success.data.results.bindings.map(e => {

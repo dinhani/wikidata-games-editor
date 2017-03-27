@@ -8,15 +8,20 @@ app.service('client', function ($sce, $http) {
     // =========================================================================
     // METHODS
     // =========================================================================
-    this.get = function (url) {
+    this.get = function (url, params) {
         let requestUrl = generateUrl(url);
         let trustedRequestUrl = $sce.trustAsResourceUrl(requestUrl)
 
+        let method = "GET";
         if (url.indexOf("api.php") != -1) {
-            return $http.jsonp(trustedRequestUrl);
-        } else {
-            return $http.get(trustedRequestUrl);
+            method = "JSONP";
         }
+
+        return $http({
+            method: method,
+            url: trustedRequestUrl,
+            params: params
+        })
 
     }
 
