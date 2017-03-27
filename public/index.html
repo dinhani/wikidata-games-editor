@@ -3,25 +3,27 @@
 
 <head>
     <style>
+        body {
+            padding: 1rem !important;
+        }
+        
         .ui.button {
             width: 150px;
         }
     </style>
 </head>
 
-<body ng-controller="AppCtrl" class="ui container">
-    <!-- MENU -->
-    <div class="ui menu">
-        <a class="item" ng-click="setProperty(item)" ng-repeat="item in data.menu">{{item.name}}</a>
+<body ng-controller="AppCtrl" class="ui fluid container">
+    <div class="ui grid">
+        <!-- SEARCH -->
+        <div class="four wide column">
+            <entity-search entities="data.entities " property="data.property"></entity-search>
+        </div>
+        <!-- EDITOR -->
+        <div class="twelve wide column">
+            <entity-editor entities="data.entities" property="data.property"></entity-editor>
+        </div>
     </div>
-
-    <!-- SEARCH -->
-    <game-search games="data.games " property="data.property"></game-search>
-
-    <br/>
-
-    <!-- EDITOR -->
-    <game-table games="data.games" property="data.property"></game-table>
 </body>
 
 <!-- ======================================================================= -->
@@ -39,8 +41,8 @@
 <!-- APP -->
 <script src="app.js "></script>
 <script src="services/client.js "></script>
-<script src="components/game-search.js "></script>
-<script src="components/game-editor.js "></script>
+<script src="components/entity-search.js "></script>
+<script src="components/entity-editor.js "></script>
 <script src="components/entity-selector.js "></script>
 
 </html>

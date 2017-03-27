@@ -11,7 +11,7 @@ java_import 'org.wikidata.wdtk.wikibaseapi.WbEditEntityAction';
 # ==============================================================================
 def login
     conn = ApiConnection.new("https://www.wikidata.org/w/api.php")
-    conn.login("username", "password")
+    conn.login("username", "password"
     return conn
 end
 conn = login()
@@ -28,13 +28,22 @@ post '/add-relationship' do
     json = JSON.parse(request.body.read)
     puts json
 
+    # parse json
+    entity_id = json["entity"]['id']
+    property_type = json['property']['type']
+    property_id = json['property']['id'].gsub("Q", "")
+
+    # log
+    puts "Saving #{entity_id} | #{property_type}=#{property_id}"
+
+
     # do edit
-    data = '{"claims":[{"mainsnak":{"snaktype":"value","property":"PROPERTY_TYPE","datavalue":{"value":{"numeric-id":"PROPERTY_VALUE","entity-type":"item"},"type":"wikibase-entityid"}},"type":"statement","rank":"normal"}]}'
-    data = data.gsub("PROPERTY_TYPE", json['propertyType'])
-    data = data.gsub("PROPERTY_VALUE", json['propertyValue'].gsub("Q", ""))
+    data = '{"claims":[{"mainsnak":{"snaktype":"value","property":"PROPERTY_TYPE","datavalue":{"value":{"numeric-id":"PROPERTY_ID","entity-type":"item"},"type":"wikibase-entityid"}},"type":"statement","rank":"normal"}]}'
+    data = data.gsub("PROPERTY_TYPE", property_type)
+    data = data.gsub("PROPERTY_ID", property_id)
 
     # send request
     editor = WbEditEntityAction.new(conn, "http://www.wikidata.org/entity/")
-    editor.wbEditEntity(json["entity"], nil, nil, nil, data, false, false, 0, "")
+    editor.wbEditEntity(entity_id, nil, nil, nil, data, false, false, 0, "")
 end
 
