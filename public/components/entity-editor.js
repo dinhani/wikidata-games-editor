@@ -1,7 +1,7 @@
 // =============================================================================
 // JS
 // =============================================================================
-app.controller('EntityEditorCtrl', function ($scope, client) {
+app.controller('EntityEditorCtrl', function ($scope, Notification, client) {
     // =========================================================================
     // DATA
     // =========================================================================
@@ -33,7 +33,14 @@ app.controller('EntityEditorCtrl', function ($scope, client) {
                     let body = { entity: { id: entity.id, name: entity.name }, property: { id: property.id, name: property.name, type: property.type } }
                     let url = "/add-relationship";
                     client.post(url, body)
-                        .then(success => property.existing = true);
+                        .then(
+                        success => {
+                            property.existing = true;
+                            Notification.success(entity.name + ' = ' + property.name);
+                        },
+                        error => {
+                            Notification.error(entity.name + ' = ' + property.name);
+                        });
                 })
             }
         })
@@ -45,9 +52,19 @@ app.controller('EntityEditorCtrl', function ($scope, client) {
 // =============================================================================
 app.component('entityEditor', {
     template: `
-        <h2 class="ui top attached header">Results</h2>
+        <div class="ui top attached segment">
+            <div class="ui two column middle aligned grid">
+                <div class="column">
+                    <h2 class="ui header">Editor</h2>
+                </div>
+                <div class="right aligned column">
+                    <a href="https://www.wikidata.org/wiki/Special:NewItem" class="ui primary button" target="_blank">New Entity</a>
+                </div>
+            </div>
+        </div>
 
         <div class="ui attached segment">
+            <label>{{$ctrl.property.name}}:</label>
             <entity-selector entities="data.sourceEntities" property="$ctrl.property"></entity-selector>
             Click "Copy" in each row to add the {{$ctrl.property.name.toLowerCase()}} from this field to the selected row
         </div>
@@ -59,7 +76,7 @@ app.component('entityEditor', {
                 <th class="one wide">Actions</th>
                 <th class="three wide">References</th>
             </thead>
-            <tbody>
+            <tbody style="max-height:400px; overflow:scroll">
                 <tr ng-repeat="entity in $ctrl.entities">
                     <td class="left aligned">
                         {{entity.name}}

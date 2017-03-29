@@ -14,7 +14,7 @@ app.controller('EntitySelectorCtrl', function ($scope, client) {
             success => {
                 let entities = success.data.search
                     .map(e => {
-                        return { id: e.id, name: e.label, name: e.label + " (" + e.description + ")", existing: false }
+                        return { id: e.id, name: e.label, name: e.label + " (" + (e.description ? e.description : 'no description') + ")", existing: false }
                     })
                     .map(e => {
                         if ($scope.$ctrl.property) {

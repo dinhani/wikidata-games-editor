@@ -4,7 +4,11 @@
 <head>
     <style>
         body {
-            padding: 1rem !important;
+            padding: 1.5rem 3rem !important;
+        }
+        
+        label {
+            font-weight: bold;
         }
         
         .ui.button {
@@ -19,7 +23,7 @@
 </head>
 
 <body ng-controller="AppCtrl" class="ui fluid container">
-    <div class="ui grid">
+    <div class="ui relaxed grid">
         <!-- SEARCH -->
         <div class="four wide column">
             <entity-search entities="data.entities " property="data.propertyToLoad"></entity-search>
@@ -38,11 +42,15 @@
 <script src="bower_components/lodash/dist/lodash.js"></script>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-notify/dist/angular-notify.js"></script>
 <script src="bower_components/ng-tags-input/ng-tags-input.js"></script>
 <script src="bower_components/angular-hotkeys/build/hotkeys.js"></script>
+<script src="bower_components/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
 
-<link rel="stylesheet " href="bower_components/ng-tags-input/ng-tags-input.css ">
-<link rel="stylesheet " href="bower_components/semantic/dist/semantic.css ">
+<link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.css">
+<link rel="stylesheet" href="bower_components/angular-notify/angular-notify.css">
+<link rel="stylesheet" href="bower_components/angular-ui-notification/dist/angular-ui-notification.min.css">
+<link rel="stylesheet" href="bower_components/semantic/dist/semantic.css">
 
 <!-- APP -->
 <script src="app.js "></script>

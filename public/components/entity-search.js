@@ -19,6 +19,10 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
                     id: "P178"
                 },
                 {
+                    name: "Distributions",
+                    id: "P437"
+                },
+                {
                     name: "Engines",
                     id: "P408"
                 },
@@ -41,6 +45,10 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
                 {
                     name: "Platforms",
                     id: "P400"
+                },
+                {
+                    name: "Periods",
+                    id: "P2408"
                 },
                 {
                     name: "Publishers",
@@ -246,20 +254,20 @@ app.component('entitySearch', {
                 <div class="inline field">
                     <div class="ui checkbox">
                         <input type="checkbox" ng-model="data.onlyWithRelatedEntities" ng-change="onlyWithRelatedEntitiesChanged()">
-                        <label>Only WITH {{$ctrl.property.name.toLowerCase()}}</label>
+                        <label>Only with {{$ctrl.property.name.toLowerCase()}}</label>
                     </div>
                 </div>
 
                 <div class="inline field">
                     <div class="ui checkbox">
                         <input type="checkbox" ng-model="data.onlyWithoutRelatedEntities" ng-change="onlyWithoutRelatedEntitiesChanged()">
-                        <label>Only WITHOUT {{$ctrl.property.name.toLowerCase()}}</label>
+                        <label>Only without {{$ctrl.property.name.toLowerCase()}}</label>
                     </div>
                 </div>
             </div>
 
             <div class="ui attached segment">
-                <div class="ui top attached label">Optional conditions</div>
+                <div class="ui top attached label">Additional conditions</div>
                 <div class="two fields">
                     <div class="field">
                         <label>Property:</label>

@@ -21,6 +21,8 @@
     "ng-tags-input": "^3.1.1",
     "lodash": "^4.17.4",
     "semantic": "semantic-ui#^2.2.9",
-    "angular-hotkeys": "chieffancypants/angular-hotkeys#^1.7.0"
+    "angular-hotkeys": "chieffancypants/angular-hotkeys#^1.7.0",
+    "angular-notify": "^2.5.1",
+    "angular-ui-notification": "^0.3.6"
   }
 }
