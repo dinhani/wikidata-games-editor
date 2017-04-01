@@ -64,15 +64,14 @@ app.component('entityEditor', {
         <div class="ui attached segment">
             <label>{{$ctrl.property.name}}:</label>
             <entity-selector entities="data.sourceEntities" property="$ctrl.property"></entity-selector>
-            Click "Copy" in each row to add the {{$ctrl.property.name.toLowerCase()}} from this field to the selected row
+            Click "Copy {{$ctrl.property.name}}" in each row to add the {{$ctrl.property.name.toLowerCase()}} from this field to the selected row
         </div>
 
-        <table class="ui attached very compact striped center aligned table">
+        <table class="ui attached very compact striped table">
             <thead>
-                <th class="two wide">Entity</td>
-                <th class="nine wide">{{$ctrl.property.name}}</th>
-                <th class="one wide">Actions</th>
-                <th class="three wide">References</th>
+                <th class="three wide">Entity</td>
+                <th class="ten wide">{{$ctrl.property.name}}</th>
+                <th class="three wide">Links</th>
             </thead>
             <tbody style="max-height:400px; overflow:scroll">
                 <tr ng-repeat="entity in $ctrl.entities">
@@ -80,14 +79,12 @@ app.component('entityEditor', {
                         {{entity.name}}
                     </td>
                     <td>
-                        <entity-selector entities="entity.properties" property="$ctrl.property"></entity-selector>
+                        <entity-selector entities="entity.properties" property="$ctrl.property" style="width:80%"></entity-selector>
+                        <a href="#" ng-click="copySourceEntities(entity.properties)">Copy {{$ctrl.property.name}}</a>
                     </td>
                     <td>
-                        <a href="#" ng-click="copySourceEntities(entity.properties)">Copy</a>
-                    </td>
-                    <td>
-                        <a ng-href="https://www.wikidata.org/wiki/{{entity.id}}" target="_blank">Wikidata</a> |
-                        <a ng-href="{{entity.link}}" target="_blank">Wikipedia</a>
+                        <a ng-href="{{entity.link}}" target="_blank">Wikipedia</a> |
+                        <a ng-href="https://www.wikidata.org/wiki/{{entity.id}}" target="_blank">Wikidata</a>
                     </td>
                 </tr>
             </tbody>
