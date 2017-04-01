@@ -90,8 +90,20 @@ app.component('entityEditor', {
             </tbody>
         </table>
         <div class="ui bottom attached segment">
-            <button class="ui primary button" ng-click="save()">Save</button>
-            <a href="https://www.wikidata.org/wiki/Special:NewItem" class="ui primary button" target="_blank">New Entity</a>
+            <div class="ui two column grid">
+                <div class="column">
+                    <button class="ui primary right labeled icon button" ng-click="save()">
+                        Save Modications
+                        <i class="save icon"></i>
+                    </button>
+                </div>
+                <div class="right aligned column">
+                    <a href="https://www.wikidata.org/wiki/Special:NewItem" class="ui primary right labeled icon button" target="_blank">
+                        New Item
+                        <i class="add icon"></i>
+                    </a>
+                </div>
+            </div>
         </div>
         `,
     controller: 'EntityEditorCtrl',

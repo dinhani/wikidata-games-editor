@@ -315,7 +315,10 @@ app.component('entitySearch', {
                 </div>
             </div>
             <div class="ui bottom attached segment">
-                <button class="ui blue button" ng-click="search()">Search</button>
+                <button class="ui primary right labeled icon button" ng-click="search()">
+                    Search
+                    <i class="search icon"></i>
+                </button>
             </div>
         </div>
         `,

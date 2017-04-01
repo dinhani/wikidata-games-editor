@@ -76,8 +76,14 @@ app.component('login', {
             Logged in as "{{data.username}}"
         </div>
         <div class="ui bottom attached segment">
-            <button ng-if="!data.loggedIn" class="ui primary button" ng-click="login()">Login</button>
-            <button ng-if="data.loggedIn" class="ui primary button" ng-click="logout()">Logout</button>
+            <button ng-if="!data.loggedIn" class="ui primary  icon button" ng-click="login()">
+                Login
+                <i class="sign in icon"></i>
+            </button>
+            <button ng-if="data.loggedIn" class="ui primary right labeled icon button" ng-click="logout()">
+                Logout
+                <i class="sign out icon"></i>
+            </button>
         </div>
         `,
     controller: 'LoginCtrl',
