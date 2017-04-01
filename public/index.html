@@ -27,7 +27,7 @@
     <div class="ui relaxed grid">
         <!-- SEARCH -->
         <div class="four wide column">
-            <entity-search entities="data.entities " property="data.propertyToLoad"></entity-search>
+            <entity-search entities="data.entities" entities-count="data.entitiesCount" property="data.propertyToLoad"></entity-search>
             <br/>
             <login></login>
         </div>
@@ -35,7 +35,7 @@
 
         <!-- EDITOR -->
         <div class="twelve wide column">
-            <entity-editor entities="data.entities" property="data.propertyToLoad"></entity-editor>
+            <entity-editor entities="data.entities" entities-count="data.entitiesCount" property="data.propertyToLoad"></entity-editor>
         </div>
     </div>
 </body>

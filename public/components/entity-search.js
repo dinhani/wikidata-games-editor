@@ -113,62 +113,13 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
     $scope.search = function () {
         // update bindings
         $scope.$ctrl.property = $scope.data.selectedSearchProperty;
-
-        // prepare entities search
-        let query = `
-            SELECT DISTINCT ?item ?itemLabel ?siteLink
-                WHERE {
-                    ?item wdt:P31 wd:` + $scope.data.selectedSearch.id + ` .
-                  	?item rdfs:label ?itemLabel .
-                    ?siteLink schema:about ?item .
-                    FILTER (SUBSTR(str(?siteLink), 1, 25) = "https://en.wikipedia.org/")`
-        if ($scope.data.additionalSearchProperties.length === $scope.data.additionalSearchPropertiesValues.length) {
-            for (var i = 0; i < $scope.data.additionalSearchProperties.length; i++) {
-                let property = $scope.data.additionalSearchProperties[i];
-                let value = $scope.data.additionalSearchPropertiesValues[i];
-                query += `
-                    FILTER EXISTS { ?item wdt:` + property.id + " wd:" + value.id + `  } . `;
-            }
-        }
-        if ($scope.data.onlyWithRelatedEntities) {
-            query += `
-                FILTER EXISTS { ?item wdt:` + $scope.data.selectedSearchProperty.id + ` ?any } . `;
-        }
-        if ($scope.data.onlyWithoutRelatedEntities) {
-            query += `
-                FILTER NOT EXISTS { ?item wdt:` + $scope.data.selectedSearchProperty.id + ` ?any } . `;
-        }
-
-        query += `
-                FILTER(REGEX(?itemLabel, '.*` + $scope.data.search + `.*', 'i')) .
-                    SERVICE wikibase:label { bd:serviceParam wikibase:language "en"
-                }
-            }
-            LIMIT 20`.trim();
-
-        let url = "https://query.wikidata.org/sparql";
-        let params = { format: "json", query: query }
+        $scope.$ctrl.entitiesCount = null;
 
         // query entities
-        $scope.data.isSearching = true;
-        return client.get(url, params)
-            .then(success => {
-                // entities loaded
-                let entities = success.data.results.bindings.map(e => {
-                    return { id: _.last(e.item.value.split('/')), name: e.itemLabel.value, properties: [], link: e.siteLink.value }
-                })
-                entities = _.sortBy(entities, e => e.name);
-                $scope.$ctrl.entities = entities;
+        queryEntities();
 
-                // query properties async
-                _.forEach(entities, entity => {
-                    loadRelatedEntities(entity, $scope.data.selectedSearchProperty)
-                })
-
-                // disable loading
-                $scope.data.isSearching = false
-            },
-            error => $scope.data.isSearching = false);
+        // query count
+        queryCount();
     }
 
     // SEARCH - ADDITIONAL LOADS
@@ -202,6 +153,86 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
                     labelCache[entity.id] = entity.name
                 });
         }
+    }
+
+    // =========================================================================
+    // QUERY
+    // =========================================================================
+    function queryEntities() {
+        // prepare request
+        let url = "https://query.wikidata.org/sparql";
+        let selectClause = "SELECT DISTINCT ?item ?itemLabel ?siteLink";
+        let query = generateBaseQuery(selectClause);
+        let params = { format: "json", query: query }
+
+        // do query
+        $scope.data.isSearching = true;
+        client.get(url, params)
+            .then(success => {
+                // entities loaded
+                let entities = success.data.results.bindings.map(e => {
+                    return { id: _.last(e.item.value.split('/')), name: e.itemLabel.value, properties: [], link: e.siteLink.value }
+                })
+                entities = _.sortBy(entities, e => e.name);
+                $scope.$ctrl.entities = entities;
+
+                // query properties async
+                _.forEach(entities, entity => {
+                    loadRelatedEntities(entity, $scope.data.selectedSearchProperty)
+                })
+
+                // disable loading
+                $scope.data.isSearching = false
+            },
+            error => $scope.data.isSearching = false);
+    }
+
+    function queryCount() {
+        // prepare request
+        let url = "https://query.wikidata.org/sparql";
+        let selectClause = "SELECT (count(DISTINCT ?item) as ?count)";
+        let query = generateBaseQuery(selectClause);
+        let params = { format: "json", query: query }
+
+        client.get(url, params)
+            .then(success => {
+                $scope.$ctrl.entitiesCount = success.data.results.bindings[0].count.value;
+            });
+    }
+
+    function generateBaseQuery(selectClause) {
+        // prepare entities search
+        let query = selectClause + `
+                WHERE {
+                    ?item wdt:P31 wd:` + $scope.data.selectedSearch.id + ` .
+                  	?item rdfs:label ?itemLabel .
+                    ?siteLink schema:about ?item .
+                    FILTER (SUBSTR(str(?siteLink), 1, 25) = "https://en.wikipedia.org/")`
+        if ($scope.data.additionalSearchProperties.length === $scope.data.additionalSearchPropertiesValues.length) {
+            for (var i = 0; i < $scope.data.additionalSearchProperties.length; i++) {
+                let property = $scope.data.additionalSearchProperties[i];
+                let value = $scope.data.additionalSearchPropertiesValues[i];
+                query += `
+                    FILTER EXISTS { ?item wdt:` + property.id + " wd:" + value.id + `  } . `;
+            }
+        }
+        if ($scope.data.onlyWithRelatedEntities) {
+            query += `
+                FILTER EXISTS { ?item wdt:` + $scope.data.selectedSearchProperty.id + ` ?any } . `;
+        }
+        if ($scope.data.onlyWithoutRelatedEntities) {
+            query += `
+                FILTER NOT EXISTS { ?item wdt:` + $scope.data.selectedSearchProperty.id + ` ?any } . `;
+        }
+
+        query += `
+                FILTER(REGEX(?itemLabel, '.*` + $scope.data.search + `.*', 'i')) .
+                    SERVICE wikibase:label { bd:serviceParam wikibase:language "en"
+                }
+            }
+            LIMIT 20`.trim();
+
+        return query;
     }
 
     // =========================================================================
@@ -291,6 +322,7 @@ app.component('entitySearch', {
     controller: 'EntitySearchCtrl',
     bindings: {
         entities: '=',
+        entitiesCount: "=",
         property: "="
     }
 })

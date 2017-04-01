@@ -24,6 +24,7 @@ app.controller('AppCtrl', function ($rootScope, $scope, client) {
     // =========================================================================
     $scope.data = {
         entities: [], // loaded entities
+        entitiesCount: null, // total number of entities that matches the query
         propertyToLoad: {}  // active relationship
     }
 })

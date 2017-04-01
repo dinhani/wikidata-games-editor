@@ -56,7 +56,7 @@ app.component('entityEditor', {
         <div class="ui top attached inverted segment">
                 <h2 class="ui medium header">
                     <i class="edit icon"></i>
-                    <div class="content">Editor</div>
+                    <div class="content">Editor <span ng-if="$ctrl.entitiesCount"> - {{$ctrl.entitiesCount}} entities</span></div>
                 </h2>
             </div>
         </div>
@@ -97,6 +97,7 @@ app.component('entityEditor', {
     controller: 'EntityEditorCtrl',
     bindings: {
         entities: "=",
+        entitiesCount: "=",
         property: "="
     }
 })
