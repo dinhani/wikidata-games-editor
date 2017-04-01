@@ -5,6 +5,7 @@
     <style>
         body {
             padding: 1.5rem 3rem !important;
+            background: #ecf0f1 !important;
         }
         
         label {
@@ -27,7 +28,11 @@
         <!-- SEARCH -->
         <div class="four wide column">
             <entity-search entities="data.entities " property="data.propertyToLoad"></entity-search>
+            <br/>
+            <login></login>
         </div>
+
+
         <!-- EDITOR -->
         <div class="twelve wide column">
             <entity-editor entities="data.entities" property="data.propertyToLoad"></entity-editor>
@@ -59,5 +64,6 @@
 <script src="components/entity-editor.js "></script>
 <script src="components/entity-selector.js "></script>
 <script src="components/property-selector.js "></script>
+<script src="components/login.js "></script>
 
 </html>

@@ -16,7 +16,8 @@ app.controller('EntityEditorCtrl', function ($scope, Notification, client) {
         $scope.data.sourceEntities.forEach(entity => {
             let notContains = _.filter(properties, p => p.id === entity.id).length === 0;
             if (notContains) {
-                properties.push(angular.copy(entity));
+                let copiedEntity = angular.copy(entity);
+                properties.push(copiedEntity);
             }
         })
     }
@@ -36,10 +37,10 @@ app.controller('EntityEditorCtrl', function ($scope, Notification, client) {
                         .then(
                         success => {
                             property.existing = true;
-                            Notification.success(entity.name + ' = ' + property.name);
+                            Notification.success(entity.name);
                         },
                         error => {
-                            Notification.error(entity.name + ' = ' + property.name);
+                            Notification.error(entity.name);
                         });
                 })
             }
@@ -52,14 +53,11 @@ app.controller('EntityEditorCtrl', function ($scope, Notification, client) {
 // =============================================================================
 app.component('entityEditor', {
     template: `
-        <div class="ui top attached segment">
-            <div class="ui two column middle aligned grid">
-                <div class="column">
-                    <h2 class="ui header">Editor</h2>
-                </div>
-                <div class="right aligned column">
-                    <a href="https://www.wikidata.org/wiki/Special:NewItem" class="ui primary button" target="_blank">New Entity</a>
-                </div>
+        <div class="ui top attached inverted segment">
+                <h2 class="ui medium header">
+                    <i class="edit icon"></i>
+                    <div class="content">Editor</div>
+                </h2>
             </div>
         </div>
 
@@ -85,7 +83,8 @@ app.component('entityEditor', {
                         <entity-selector entities="entity.properties" property="$ctrl.property"></entity-selector>
                     </td>
                     <td>
-                        <a href="#" ng-click="copySourceEntities(entity.properties)">Copy</a></td>
+                        <a href="#" ng-click="copySourceEntities(entity.properties)">Copy</a>
+                    </td>
                     <td>
                         <a ng-href="https://www.wikidata.org/wiki/{{entity.id}}" target="_blank">Wikidata</a> |
                         <a ng-href="{{entity.link}}" target="_blank">Wikipedia</a>
@@ -95,6 +94,7 @@ app.component('entityEditor', {
         </table>
         <div class="ui bottom attached segment">
             <button class="ui primary button" ng-click="save()">Save</button>
+            <a href="https://www.wikidata.org/wiki/Special:NewItem" class="ui primary button" target="_blank">New Entity</a>
         </div>
         `,
     controller: 'EntityEditorCtrl',

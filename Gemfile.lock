@@ -2,6 +2,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     backports (3.6.8)
+    moneta (1.0.0)
     multi_json (1.12.1)
     rack (1.6.4)
     rack-protection (1.5.3)
@@ -27,6 +28,7 @@ PLATFORMS
   java
 
 DEPENDENCIES
+  moneta
   sinatra
   sinatra-reloader
 

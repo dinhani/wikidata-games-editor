@@ -144,7 +144,7 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
                     SERVICE wikibase:label { bd:serviceParam wikibase:language "en"
                 }
             }
-            LIMIT 15`.trim();
+            LIMIT 20`.trim();
 
         let url = "https://query.wikidata.org/sparql";
         let params = { format: "json", query: query }
@@ -228,10 +228,14 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
 app.component('entitySearch', {
     template: `
         <div class="ui {{data.isSearching ? 'loading' : ''}} form" ng-init="init()">
-            <h2 class="ui top attached header">Search</h2>
+            <div class="ui top attached inverted segment">
+                <h2 class="ui medium header">
+                    <i class="search icon"></i>
+                    <div class="content">Search</div>
+                </h2>
+            </div>
 
             <div class="ui attached segment">
-                <div class="ui top attached label">Basic information</div>
                 <div class="two fields">
                     <div class="field">
                         <label>Search for:</label>
@@ -280,7 +284,7 @@ app.component('entitySearch', {
                 </div>
             </div>
             <div class="ui bottom attached segment">
-                <button class="ui primary button" ng-click="search()">Search</button>
+                <button class="ui blue button" ng-click="search()">Search</button>
             </div>
         </div>
         `,
