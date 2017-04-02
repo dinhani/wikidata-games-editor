@@ -10,7 +10,7 @@ java_import 'org.wikidata.wdtk.wikibaseapi.WbEditEntityAction';
 # CONFIGURATION
 # ==============================================================================
 # environment
-set :environment, :production unless ENV["COMPUTERNAME"].include? "RENATO"
+set :environment, :production unless `hostname`.downcase.include? "renato"
 
 # reloader
 require 'sinatra/reloader' if development?
