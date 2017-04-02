@@ -1,16 +1,22 @@
 require 'jbundler'
 require 'sinatra'
-require 'sinatra/reloader'
 require 'json'
 
 java_import 'org.wikidata.wdtk.wikibaseapi.ApiConnection'
 java_import 'org.wikidata.wdtk.wikibaseapi.WbEditEntityAction';
 
+
 # ==============================================================================
 # CONFIGURATION
 # ==============================================================================
-use Rack::Session::Pool do
-end
+# environment
+set :environment, :production unless ENV["COMPUTERNAME"].include? "RENATO"
+
+# reloader
+require 'sinatra/reloader' if development?
+
+# session
+use Rack::Session::Pool, :expire_after => 60 * 30 # 30 minutes
 
 # ==============================================================================
 # CHECKS
