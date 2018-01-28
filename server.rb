@@ -10,7 +10,8 @@ java_import 'org.wikidata.wdtk.wikibaseapi.WbEditEntityAction';
 # CONFIGURATION
 # ==============================================================================
 # environment
-set :environment, :production unless `hostname`.downcase.include? "renato"
+hostname = `hostname`.downcase
+set :environment, :production unless hostname.include? "renato" or hostname.include? "desktop"
 
 # reloader
 require 'sinatra/reloader' if development?
@@ -90,4 +91,3 @@ post '/add-relationship' do
     editor = WbEditEntityAction.new(session[:conn], "http://www.wikidata.org/entity/")
     editor.wbEditEntity(entity_id, nil, nil, nil, data, false, false, 0, "")
 end
-

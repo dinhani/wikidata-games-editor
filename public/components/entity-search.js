@@ -315,7 +315,7 @@ app.component('entitySearch', {
                 </div>
             </div>
             <div class="ui bottom attached segment">
-                <button class="ui primary right labeled icon button" ng-click="search()">
+                <button class="ui primary right labeled icon {{data.isSearching ? 'loading' : ''}} button" ng-click="search()" ng-disabled="data.isSearching">
                     Search
                     <i class="search icon"></i>
                 </button>

@@ -1,12 +1,13 @@
 // =============================================================================
 // JS
 // =============================================================================
-app.controller('EntityEditorCtrl', function ($scope, Notification, client) {
+app.controller('EntityEditorCtrl', function ($scope, $q, Notification, client) {
     // =========================================================================
     // DATA
     // =========================================================================
     $scope.data = {
-        sourceEntities: []
+        sourceEntities: [],
+        isSaving: false
     }
 
     // =========================================================================
@@ -23,6 +24,10 @@ app.controller('EntityEditorCtrl', function ($scope, Notification, client) {
     }
 
     $scope.save = function () {
+        // requests being saved
+        $scope.data.isSaving = true;
+        let requests = [];
+
         // check which entities needs saving
         $scope.$ctrl.entities.forEach(entity => {
             // check if entities has properties to save
@@ -33,8 +38,11 @@ app.controller('EntityEditorCtrl', function ($scope, Notification, client) {
                 propertiesToSave.forEach(property => {
                     let body = { entity: { id: entity.id, name: entity.name }, property: { id: property.id, name: property.name, type: property.type } }
                     let url = "/add-relationship";
-                    client.post(url, body)
-                        .then(
+
+                    let request =  client.post(url, body);
+                    requests.push(request);
+
+                    request.then(
                         success => {
                             property.existing = true;
                             Notification.success(entity.name);
@@ -42,8 +50,13 @@ app.controller('EntityEditorCtrl', function ($scope, Notification, client) {
                         error => {
                             Notification.error(entity.name);
                         });
-                })
+                });
             }
+        });
+
+        // await all requests to stop loading
+        $q.all(requests).finally(() => {
+            $scope.data.isSaving = false;
         })
     }
 })
@@ -92,7 +105,7 @@ app.component('entityEditor', {
         <div class="ui bottom attached segment">
             <div class="ui two column grid">
                 <div class="column">
-                    <button class="ui primary right labeled icon button" ng-click="save()">
+                    <button class="ui primary right labeled icon {{data.isSaving ? 'loading' : ''}} button" ng-click="save()" ng-disabled="data.isSaving">
                         Save Modications
                         <i class="save icon"></i>
                     </button>

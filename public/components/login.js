@@ -21,21 +21,30 @@ app.controller('LoginCtrl', function ($scope, Notification, client) {
         $scope.data.isLoginIn = true;
         client.post('/login', body).then(
             success => {
-                Notification.success($scope.data.username + " logged in")
                 $scope.data.loggedIn = true;
                 $scope.data.isLoginIn = false;
+                Notification.success($scope.data.username + " logged in")
             },
             error => {
-                Notification.error("Error login in");
                 $scope.data.isLoginIn = false;
+                Notification.error("Error login in");
             }
         )
     }
 
     $scope.logout = function () {
+        $scope.data.isLoginIn = true;
         client.post('/logout').then(
-            success => $scope.data.loggedIn = false,
-            error => $scope.data.loggedIn = false
+            success => {
+                $scope.data.isLoginIn = false;
+                $scope.data.loggedIn = false
+                Notification.success("Logged out");
+            },
+            error => {
+                $scope.data.isLoginIn = false;
+                $scope.data.loggedIn = false
+                Notification.error("Error login out");
+            }
         )
     }
 
@@ -76,11 +85,11 @@ app.component('login', {
             Logged in as "{{data.username}}"
         </div>
         <div class="ui bottom attached segment">
-            <button ng-if="!data.loggedIn" class="ui primary  icon button" ng-click="login()">
+            <button ng-if="!data.loggedIn" class="ui primary icon {{data.isLoginIn ? 'loading' : ''}} button" ng-click="login()" ng-disabled="data.isLoginIn">
                 Login
                 <i class="sign in icon"></i>
             </button>
-            <button ng-if="data.loggedIn" class="ui primary right labeled icon button" ng-click="logout()">
+            <button ng-if="data.loggedIn" class="ui primary right labeled icon {{data.isLoginIn ? 'loading' : ''}}  button" ng-click="logout()" ng-disabled="data.isLoginIn">
                 Logout
                 <i class="sign out icon"></i>
             </button>
