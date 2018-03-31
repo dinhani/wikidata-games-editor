@@ -292,15 +292,15 @@ app.component('entitySearch', {
 
                 <div class="inline field">
                     <div class="ui checkbox">
-                        <input type="checkbox" ng-model="data.onlyWithRelatedEntities" ng-change="onlyWithRelatedEntitiesChanged()">
-                        <label>Only with {{$ctrl.property.name.toLowerCase()}}</label>
+                        <input id="field.withProperty" type="checkbox" ng-model="data.onlyWithRelatedEntities" ng-change="onlyWithRelatedEntitiesChanged()">
+                        <label for="field.withProperty">Only with {{$ctrl.property.name.toLowerCase()}}</label>
                     </div>
                 </div>
 
                 <div class="inline field">
                     <div class="ui checkbox">
-                        <input type="checkbox" ng-model="data.onlyWithoutRelatedEntities" ng-change="onlyWithoutRelatedEntitiesChanged()">
-                        <label>Only without {{$ctrl.property.name.toLowerCase()}}</label>
+                        <input id="field.withoutProperty" type="checkbox" ng-model="data.onlyWithoutRelatedEntities" ng-change="onlyWithoutRelatedEntitiesChanged()">
+                        <label for="field.withoutProperty">Only without {{$ctrl.property.name.toLowerCase()}}</label>
                     </div>
                 </div>
             </div>
