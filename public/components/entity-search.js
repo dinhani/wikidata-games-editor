@@ -42,6 +42,10 @@ app.controller('EntitySearchCtrl', function ($scope, hotkeys, client) {
                     name: "Locations",
                     id: "P840"
                 },
+				{
+                    name: "Mechanics",
+                    id: "P2283"
+                },
                 {
                     name: "Platforms",
                     id: "P400"

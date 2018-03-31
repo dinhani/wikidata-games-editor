@@ -57,7 +57,7 @@ PLATFORMS
 DEPENDENCIES
   jbundler
   json
-  sinatra
+  sinatra (= 1.4.7)
   sinatra-reloader
 
 BUNDLED WITH
